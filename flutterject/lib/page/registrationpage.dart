@@ -89,7 +89,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   decoration: InputDecoration(
                       labelText: 'Password ',
                       border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock_outlined)),
+                      prefixIcon: Icon(Icons.lock_outlined)
+                  ),
+                  obscureText: true,
                 ),
                 SizedBox(
                   height: 20,
@@ -99,8 +101,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   decoration: InputDecoration(
                       labelText: 'Confirm Password ',
                       border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.password)),
+                      prefixIcon: Icon(Icons.lock_outlined)
+                  ),
+                  obscureText: true,
                 ),
+
                 SizedBox(
                   height: 20,
                 ),
