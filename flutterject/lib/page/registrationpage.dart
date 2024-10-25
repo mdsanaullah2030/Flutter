@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutterject/page/loginpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dob_input_field/dob_input_field.dart';
 import 'package:date_field/date_field.dart';
+import 'package:http/http.dart' as http;
 
 class RegistrationPage extends StatefulWidget {
 
@@ -28,29 +32,83 @@ class _RegistrationPageState extends State<RegistrationPage> {
   // final TextEditingController gender = TextEditingController();
 
   String? selectedGender;
+  DateTime? selecteDOB;
 
   final _formKey = GlobalKey<FormState>();
 
 
 
 
+  // // Method to validate form and check passwords
+  // void _register() {
+  //   if (_formKey.currentState!.validate()) {
+  //
+  //
+  //     String uName = name.text;
+  //     String uEmail = email.text;
+  //     String uPassword = password.text;
+  //
+  //
+  //
+  //     // Registration logic goes here (e.g., sending data to server)
+  //
+  //     print('Name: $uName, Email: $uEmail, Password: $uPassword');
+  //   }
+  // }
   // Method to validate form and check passwords
-  void _register() {
+  void _register() async {
+
     if (_formKey.currentState!.validate()) {
-
-
       String uName = name.text;
       String uEmail = email.text;
       String uPassword = password.text;
+      String uCell = cell.text;
+      String uAddress = address.text;
+      String uGender = selectedGender ?? 'Other';
+      String uDob = selecteDOB != null ? selecteDOB!.toIso8601String() : '';
 
+      // Send data to the server
+      final response = await _sendDataToBackend(uName, uEmail, uPassword, uCell, uAddress, uGender, uDob);
 
-
-      // Registration logic goes here (e.g., sending data to server)
-
-      print('Name: $uName, Email: $uEmail, Password: $uPassword');
+      if (response.statusCode == 201 || response.statusCode == 200  ) {
+        // Registration successful
+        print('Registration successful!');
+      } else if (response.statusCode == 409) {
+        // User already exists
+        print('User already exists!');
+      } else {
+        print('Registration failed with status: ${response.statusCode}');
+      }
     }
   }
 
+  // HTTP POST Request to send data to backend
+  Future<http.Response> _sendDataToBackend(
+      String name,
+      String email,
+      String password,
+      String cell,
+      String address,
+      String gender,
+      String dob,
+      ) async {
+
+    const String url = 'http://localhost:8080/register'; // Android emulator
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'password': password,
+        'cell': cell,
+        'address': address,
+        'gender': gender,
+        'dob': dob,
+      }),
+    );
+    return response;
+  }
 
 
   @override
@@ -213,6 +271,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     )
                 ),
 
+                // Login Text Button
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Loginpage()),
+                    );
+                  },
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                )
               ],
             ),
           ),

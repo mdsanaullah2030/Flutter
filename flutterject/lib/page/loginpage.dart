@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterject/page/registrationpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 class Loginpage extends StatelessWidget {
 
@@ -65,6 +66,23 @@ final TextEditingController password=TextEditingController();
                 foregroundColor: Colors.white,
 
 
+              ),
+            ),
+
+            // Login Text Button
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegistrationPage()),
+                );
+              },
+              child: Text(
+                'Registration',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             )
           ],
