@@ -7,6 +7,7 @@ final TextEditingController password=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.lightBlueAccent, // Add your background color here
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -16,6 +17,11 @@ final TextEditingController password=TextEditingController();
               controller: email,
               decoration: InputDecoration(
                 labelText: 'Email',
+                  labelStyle: TextStyle(
+                    color: Colors.white,           // Font color
+                    fontWeight: FontWeight.bold,  // Font weight
+                    fontSize: 16,                 // Font size (optional)
+                  ),
                 border: OutlineInputBorder(),
                 prefixIcon:Icon(Icons.email)
                     
@@ -29,16 +35,16 @@ final TextEditingController password=TextEditingController();
             TextField(
               controller: password,
               decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  prefixIcon:Icon(Icons.password)
-
+                labelText: 'Password',
+                labelStyle: TextStyle(
+                  color: Colors.white,           // Font color
+                  fontWeight: FontWeight.bold,  // Font weight
+                  fontSize: 16,                 // Font size (optional)
+                ),
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.password),
               ),
               obscureText: true,
-            ),
-
-            SizedBox(
-              height: 20,
             ),
 
             ElevatedButton(onPressed: (){
