@@ -1,21 +1,42 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutterject/page/home.dart';
-import 'package:flutterject/page/registrationpage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
-class Loginpage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
-  final storage = new FlutterSecureStorage();
+  final storage = FlutterSecureStorage();
+  File? _profileImage;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+  }
+
+  // Load profile image from storage
+  Future<void> _loadProfileImage() async {
+    final imagePath = await storage.read(key: 'profile_image');
+    if (imagePath != null) {
+      setState(() {
+        _profileImage = File(imagePath);
+      });
+    }
+  }
 
   Future<void> loginUser(BuildContext context) async {
-    final url = Uri.parse('http://localhost:8080/login');
+    final url = Uri.parse('http://localhost:8080/login'); // Update to your server's URL
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -37,11 +58,7 @@ class Loginpage extends StatelessWidget {
       await storage.write(key: 'role', value: role);
 
       print('Login successful. Sub: $sub, Role: $role');
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else {
       print('Login failed with status: ${response.statusCode}');
     }
@@ -50,88 +67,44 @@ class Loginpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent, // Add your background color here
+      backgroundColor: Colors.lightBlueAccent,
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
+              child: _profileImage == null ? Icon(Icons.person, size: 40) : null,
+            ),
+            SizedBox(height: 20),
             TextField(
               controller: email,
               decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyle(
-                    color: Colors.white, // Font color
-                    fontWeight: FontWeight.bold, // Font weight
-                    fontSize: 16, // Font size (optional)
-                  ),
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email)
-
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email),
               ),
             ),
-
-            SizedBox(
-              height: 20,
-            ),
-
+            SizedBox(height: 20),
             TextField(
               controller: password,
               decoration: InputDecoration(
                 labelText: 'Password',
-                labelStyle: TextStyle(
-                  color: Colors.white, // Font color
-                  fontWeight: FontWeight.bold, // Font weight
-                  fontSize: 16, // Font size (optional)
-                ),
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.password),
+                prefixIcon: Icon(Icons.lock),
               ),
               obscureText: true,
             ),
-
-            ElevatedButton(onPressed: () {
-              String em = email.text;
-              String pass = password.text;
-              print('Email:$em,Password:$pass');
-            },
-              child: Text("Login",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontFamily: GoogleFonts
-                        .lato()
-                        .fontFamily
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.white,
-
-
-              ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => loginUser(context),
+              child: Text("Login", style: GoogleFonts.lato(fontWeight: FontWeight.bold)),
             ),
-
-            // Login Text Button
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegistrationPage()),
-                );
-              },
-              child: Text(
-                'Registration',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            )
           ],
         ),
-
       ),
     );
   }
-
 }
