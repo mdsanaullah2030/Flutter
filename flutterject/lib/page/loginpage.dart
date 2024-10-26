@@ -1,10 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutterject/page/home.dart';
 import 'package:flutterject/page/registrationpage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:jwt_decode/jwt_decode.dart';
+
 class Loginpage extends StatelessWidget {
 
-final TextEditingController email=TextEditingController();
-final TextEditingController password=TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final storage = new FlutterSecureStorage();
+
+
+  Future<void> loginUser(BuildContext context) async {
+    final url = Uri.parse('http://localhost:8080/login');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email.text, 'password': password.text}),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      final token = responseData['token'];
+
+      // Decode JWT to get 'sub' and 'role'
+      Map<String, dynamic> payload = Jwt.parseJwt(token);
+      String sub = payload['sub'];
+      String role = payload['role'];
+
+      // Store token, sub, and role securely
+      await storage.write(key: 'token', value: token);
+      await storage.write(key: 'sub', value: sub);
+      await storage.write(key: 'role', value: role);
+
+      print('Login successful. Sub: $sub, Role: $role');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    } else {
+      print('Login failed with status: ${response.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,15 +59,15 @@ final TextEditingController password=TextEditingController();
             TextField(
               controller: email,
               decoration: InputDecoration(
-                labelText: 'Email',
+                  labelText: 'Email',
                   labelStyle: TextStyle(
-                    color: Colors.white,           // Font color
-                    fontWeight: FontWeight.bold,  // Font weight
-                    fontSize: 16,                 // Font size (optional)
+                    color: Colors.white, // Font color
+                    fontWeight: FontWeight.bold, // Font weight
+                    fontSize: 16, // Font size (optional)
                   ),
-                border: OutlineInputBorder(),
-                prefixIcon:Icon(Icons.email)
-                    
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email)
+
               ),
             ),
 
@@ -38,9 +80,9 @@ final TextEditingController password=TextEditingController();
               decoration: InputDecoration(
                 labelText: 'Password',
                 labelStyle: TextStyle(
-                  color: Colors.white,           // Font color
-                  fontWeight: FontWeight.bold,  // Font weight
-                  fontSize: 16,                 // Font size (optional)
+                  color: Colors.white, // Font color
+                  fontWeight: FontWeight.bold, // Font weight
+                  fontSize: 16, // Font size (optional)
                 ),
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.password),
@@ -48,19 +90,19 @@ final TextEditingController password=TextEditingController();
               obscureText: true,
             ),
 
-            ElevatedButton(onPressed: (){
-              String em=email.text;
-              String pass=password.text;
+            ElevatedButton(onPressed: () {
+              String em = email.text;
+              String pass = password.text;
               print('Email:$em,Password:$pass');
-
-
             },
-            child: Text("Login",
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily:GoogleFonts.lato().fontFamily
-            ),
-            ),
+              child: Text("Login",
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: GoogleFonts
+                        .lato()
+                        .fontFamily
+                ),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber,
                 foregroundColor: Colors.white,
@@ -87,8 +129,9 @@ final TextEditingController password=TextEditingController();
             )
           ],
         ),
-        
+
       ),
     );
   }
+
 }
