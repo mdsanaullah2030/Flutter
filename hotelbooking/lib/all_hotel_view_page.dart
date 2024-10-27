@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotelbooking/hotellist.dart';
+import 'package:hotelbooking/model/hotel.dart';
 import 'package:hotelbooking/service/hotel_service.dart';
 
 class AllHotelViewPage extends StatefulWidget {
@@ -19,7 +19,6 @@ class _AllHotelViewPageState extends State<AllHotelViewPage> {
     futureHotels = HotelService().fetchHotels();
     print(futureHotels);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

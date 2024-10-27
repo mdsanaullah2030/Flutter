@@ -1,8 +1,6 @@
 import 'package:hotelbooking/model/lcation.dart';
 
 
-
-
 class Hotel {
   int? id;
   String? name;

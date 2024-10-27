@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dob_input_field/dob_input_field.dart';
 import 'package:date_field/date_field.dart';
-import 'package:hotelbooking/loginpage.dart';
+import 'loginpage.dart';
 import 'package:http/http.dart' as http;
 
 class RegistrationPage extends StatefulWidget {

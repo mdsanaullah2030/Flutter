@@ -1,7 +1,8 @@
+
 class Location {
   int? id;
   String? name;
-  Null? image;
+  String? image;
 
   Location({this.id, this.name, this.image});
 
