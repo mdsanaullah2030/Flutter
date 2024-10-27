@@ -7,6 +7,7 @@ class LocationSearch extends StatefulWidget {
 
 class _LocationSearchState extends State<LocationSearch> {
   // Sample list of hotel locations
+
   final List<String> _allLocations = [
     'Paris',
     'London',
@@ -15,8 +16,6 @@ class _LocationSearchState extends State<LocationSearch> {
     'Sydney',
     'Dubai',
   ];
-
-  // List to hold filtered items
   late List<String> _filteredLocations;
   TextEditingController _searchController = TextEditingController();
 
@@ -37,8 +36,9 @@ class _LocationSearchState extends State<LocationSearch> {
   void _onSearchChanged() {
     setState(() {
       _filteredLocations = _allLocations
-          .where((location) =>
-          location.toLowerCase().contains(_searchController.text.toLowerCase()))
+          .where((location) => location
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase()))
           .toList();
     });
   }
@@ -46,35 +46,86 @@ class _LocationSearchState extends State<LocationSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search Locations'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search location...',
-                prefixIcon: Icon(Icons.search),
+      backgroundColor: Colors.indigo,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Row with Greeting and Notification Icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Hi, Sanaullah!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.all(12),
+                    child: Icon(
+                      Icons.notifications,
+                      color: Colors.amberAccent,
+                    ),
+                  ),
+                ],
               ),
-            ),
+              SizedBox(height: 20),
+              // Search Bar for Locations
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search for locations...',
+                    border: InputBorder.none,
+                    icon: Icon(Icons.search, color: Colors.grey),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              // Display Filtered Locations
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _filteredLocations.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 12),
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_city, color: Colors.white),
+                          SizedBox(width: 12),
+                          Text(
+                            _filteredLocations[index],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredLocations.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_filteredLocations[index]),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
-
-
