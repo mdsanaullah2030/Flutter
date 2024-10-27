@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotelbooking/home.dart';
 import 'package:hotelbooking/hotellist.dart';
 import 'package:hotelbooking/location.dart';
+import 'package:hotelbooking/loginpage.dart';
 import 'package:hotelbooking/welcome.dart';
 
 void main() {

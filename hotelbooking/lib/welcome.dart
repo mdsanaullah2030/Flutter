@@ -74,15 +74,20 @@ class Welcome extends StatelessWidget {
               fontSize: 17,
               color: Colors.white
             ),),
-            SizedBox(height: 10,),
+            SizedBox(height: 15),
             Container(
-              width: 105, // Set desired width for the image
-              height: 33, // Set desired height for the image
+              width: 130, // Set desired width for the image
+              height: 35, // Set desired height for the image
               child: Image.network(
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_lg4IYq52pH6iNDsynjnfYr_g_VzA4BXuqq6iRJ2EdYF99l4gs3HZ0WItJzL8cBx-AO4&usqp=CAU",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRvgrpKuombcKLhwf_wTm15PG3pZ2NZLDXKnnzjogrjBrwZRKMRVzFs7axixYPOtkRGhI&usqp=CAU",
                 fit: BoxFit.cover,
               ),
             ),
+
+
+            SizedBox(height: 15),
+
+
           ],
         ),
       ),
