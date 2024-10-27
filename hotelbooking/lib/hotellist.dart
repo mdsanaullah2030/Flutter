@@ -15,6 +15,10 @@ class Hotel {
     required this.location,
     this.isFavorite = false,
   });
+
+
+
+
 }
 
 class Hotellist extends StatefulWidget {
