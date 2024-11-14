@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hotelbooking/model/booking.dart';
+import 'package:hotelbooking/model/room.dart';
+import 'package:hotelbooking/service/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingForm extends StatefulWidget {
+
+  final Room room;
+
+  BookingForm({required this.room});
+
   @override
   _BookingFormState createState() => _BookingFormState();
 }
@@ -20,6 +27,19 @@ class _BookingFormState extends State<BookingForm> {
 
   final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
+  // Calculate total price based on room price and number of nights
+  void _calculateTotalPrice() {
+    if (checkinDate != null && checkoutDate != null) {
+      final duration = checkoutDate!.difference(checkinDate!);
+      if (duration.inDays > 0) {
+        final totalPrice = duration.inDays * widget.room.price;
+        totalPriceController.text = totalPrice.toString();
+      } else {
+        totalPriceController.text = '0';
+      }
+    }
+  }
+
   Future<void> _selectCheckinDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -31,6 +51,7 @@ class _BookingFormState extends State<BookingForm> {
       setState(() {
         checkinDate = picked;
       });
+    _calculateTotalPrice(); // Recalculate total price when check-in date changes
   }
 
   Future<void> _selectCheckoutDate(BuildContext context) async {
@@ -44,6 +65,7 @@ class _BookingFormState extends State<BookingForm> {
       setState(() {
         checkoutDate = picked;
       });
+    _calculateTotalPrice(); // Recalculate total price when check-out date changes
   }
 
   void _saveBooking() async {
@@ -59,10 +81,6 @@ class _BookingFormState extends State<BookingForm> {
       );
 
       print("Booking Saved: ${booking.toJson()}");
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('hotelName', hotelNameController.text);
-      await prefs.setString('roomType', roomTypeController.text);
       _clearDatesFromStorage();
     }
   }
@@ -86,9 +104,12 @@ class _BookingFormState extends State<BookingForm> {
   Future<void> _loadData() async {
     checkinDate = await _getDateFromStorage('checkInDate');
     checkoutDate = await _getDateFromStorage('checkOutDate');
-    final prefs = await SharedPreferences.getInstance();
-    hotelNameController.text = prefs.getString('hotelName') ?? '';
-    roomTypeController.text = prefs.getString('roomType') ?? '';
+    hotelNameController.text = widget.room.hotel.name!;
+    roomTypeController.text = widget.room.roomType;
+    Map<String, dynamic>? user = await AuthService().getStoredUser();
+    userNameController.text = user?['name'];
+    userEmailController.text = user?['email'];
+    _calculateTotalPrice(); // Calculate total price based on dates and room price
     setState(() {});
   }
 
@@ -124,28 +145,33 @@ class _BookingFormState extends State<BookingForm> {
               TextFormField(
                 controller: roomTypeController,
                 decoration: InputDecoration(labelText: 'Room Type'),
+                enabled: false,
                 validator: (value) => value == null || value.isEmpty ? 'Please enter room type' : null,
               ),
               TextFormField(
                 controller: hotelNameController,
                 decoration: InputDecoration(labelText: 'Hotel Name'),
+                enabled: false,
                 validator: (value) => value == null || value.isEmpty ? 'Please enter hotel name' : null,
               ),
               TextFormField(
                 controller: userNameController,
                 decoration: InputDecoration(labelText: 'User Name'),
+                enabled: false,
                 validator: (value) => value == null || value.isEmpty ? 'Please enter user name' : null,
               ),
               TextFormField(
                 controller: userEmailController,
                 decoration: InputDecoration(labelText: 'User Email'),
                 validator: (value) => value == null || value.isEmpty ? 'Please enter user email' : null,
+                enabled: false,
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(
                 controller: totalPriceController,
                 decoration: InputDecoration(labelText: 'Total Price'),
                 keyboardType: TextInputType.number,
+                enabled: false,
                 validator: (value) => value == null || value.isEmpty ? 'Please enter total price' : null,
               ),
               SizedBox(height: 20),
@@ -160,3 +186,4 @@ class _BookingFormState extends State<BookingForm> {
     );
   }
 }
+

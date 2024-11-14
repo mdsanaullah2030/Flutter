@@ -12,8 +12,8 @@ import 'package:hotelbooking/service/AuthService.dart';
 
 class LoginPage extends StatelessWidget {
 
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
+  final TextEditingController email = TextEditingController()..text = 'Kutub@gmail.com';
+  final TextEditingController password = TextEditingController()..text = '123456';
   final storage = new FlutterSecureStorage();
   AuthService authService=AuthService();
 

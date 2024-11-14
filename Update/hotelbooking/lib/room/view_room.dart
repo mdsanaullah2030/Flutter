@@ -129,7 +129,9 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => BookingForm(),
+                                              builder: (context) => BookingForm(
+                                                  room: room,
+                                              ),
                                             ),
                                           );
                                         },
