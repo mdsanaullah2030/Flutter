@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hotelbooking/booking/view_booking.dart';
 import 'package:hotelbooking/location/location_view.dart';
+import 'package:hotelbooking/page/AdminPage.dart';
+import 'package:hotelbooking/page/HotelProfilePage.dart';
 import 'package:hotelbooking/page/loginpage.dart';
 import 'package:hotelbooking/page/registrationpage.dart';
 
@@ -40,7 +43,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     {"img": "https://cdn-icons-png.freepik.com/256/11729/11729048.png?ga=GA1.1.1937478974.1725011926&semt=ais_hybrid", "title": "Location"},
     {"img": "https://cdn-icons-png.freepik.com/256/11585/11585941.png?ga=GA1.1.1937478974.1725011926&semt=ais_hybrid", "title": "Login"},
     {"img": "https://cdn-icons-png.freepik.com/256/8424/8424145.png?ga=GA1.1.1937478974.1725011926&semt=ais_hybrid", "title": "Registation"},
-
+    {"img": "https://cdn-icons-png.freepik.com/256/5038/5038849.png?ga=GA1.1.1937478974.1725011926&semt=ais_hybrid", "title": "Booking"},
+    {"img": "https://cdn-icons-png.freepik.com/256/7840/7840432.png?ga=GA1.1.1937478974.1725011926&semt=ais_hybrid", "title": "Hotel"},
+    {"img": "https://cdn-icons-png.freepik.com/256/3281/3281355.png?ga=GA1.1.1937478974.1725011926&semt=ais_hybrid", "title": "Admin"}
   ];
 
   final List<String> cardRoutes = [
@@ -269,6 +274,27 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   MaterialPageRoute(builder: (_) =>  LoginPage()),
                 );
               }
+              else if (item["title"] == "Booking") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) =>  ViewBooking()),
+                );
+              }
+
+              else if (item["title"] == "Hotel") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) =>  HotelProfilePage(hotelName: "", hotelImageUrl: "", address: "", rating: "", minPrice: 2, maxPrice: 2)),
+                );
+              }
+
+              else if (item["title"] == "Admin") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) =>  AdminPage()),
+                );
+              }
+
             },
             child: Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

@@ -103,7 +103,19 @@ class _LocationViewState extends State<LocationView> {
     final dateFormat = DateFormat('yyyy-MM-dd');
 
     return Scaffold(
-      appBar: AppBar(title: Text("Booking Details")),
+      appBar: AppBar(
+        title: Text("Booking Details"),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.orange], // Mix of blue and orange
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+      ),
+
       body: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
