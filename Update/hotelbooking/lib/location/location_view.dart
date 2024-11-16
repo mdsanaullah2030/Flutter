@@ -253,36 +253,6 @@ class _LocationViewState extends State<LocationView> {
                                   ),
                                 ),
                               ),
-
-
-
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Navigate to AllHotelViewPage with the selected location
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => UpdateLocationPage(location: location ,)),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.amber,
-                                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Update Locaton',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-
                             ],
                           ),
                         );
