@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hotelbooking/booking/Invoice.dart';
 import 'package:hotelbooking/model/booking.dart';
 import 'package:hotelbooking/model/room.dart';
+import 'package:hotelbooking/page/home.dart';
 import 'package:hotelbooking/service/AuthService.dart';
 import 'package:hotelbooking/service/booking_service.dart';
 import 'package:intl/intl.dart';
@@ -79,22 +81,38 @@ class _BookingFormState extends State<BookingForm> {
         hotelName: hotelNameController.text,
         userName: userNameController.text,
         userEmail: userEmailController.text,
-        room : widget.room
+        room: widget.room,
       );
+
       Map<String, dynamic>? userMap = await AuthService().getStoredUser();
       final bookingWithUser = {
         ...booking.toJson(),
         'user': {
-          'id': userMap?['id']
+          'id': userMap?['id'],
         },
       };
 
       Booking? savedBooking = await BookingService().saveBooking(bookingWithUser);
 
-      //print("Booking Saved: ${savedBooking?.toJson()}");
-      _clearDatesFromStorage();
+      if (savedBooking != null) {
+        _clearDatesFromStorage();
+
+        // Navigate to Invoice page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      } else {
+        // Handle save failure
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save booking. Please try again.')),
+        );
+      }
     }
   }
+
 
   Future<void> _clearDatesFromStorage() async {
     final prefs = await SharedPreferences.getInstance();
@@ -190,6 +208,9 @@ class _BookingFormState extends State<BookingForm> {
                 onPressed: saveBooking,
                 child: Text('Save Booking'),
               ),
+
+
+
             ],
           ),
         ),
