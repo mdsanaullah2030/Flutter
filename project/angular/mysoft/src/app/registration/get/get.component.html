@@ -1,0 +1,27 @@
+<div class="container mt-5">
+  <h2>Registration List</h2>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Present Address</th>
+        <th>Permanent Address</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Phone Numbar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reg of registrations; let i = index">
+        <td>{{ reg.id }}</td>
+        <td>{{ reg.name }}</td>
+        <td>{{ reg.presentAddress }}</td>
+        <td>{{ reg.permanentAddress }}</td>
+        <td>{{ reg.gender }}</td>
+        <td>{{ reg.age }}</td>
+        <td>{{ reg.cellNo }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

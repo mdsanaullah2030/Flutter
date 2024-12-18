@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">App</string>
+    <string-array name="app_name">
+        <item>Personal</item>
+        <item>Work</item>
+        <item>Shopping</item>
+        <item>Errands</item>
+    </string-array>
+</resources>
