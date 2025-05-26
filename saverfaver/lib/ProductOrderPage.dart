@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saverfaver/OrderConfirmationPage.dart';
 
 class ProductOrderPage extends StatelessWidget {
   const ProductOrderPage({super.key});
@@ -115,7 +116,14 @@ class ProductOrderPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderConfirmationPage(userName: 'Alex'),
+                      ),
+                    );
+                  },
                   child: const Text("SUBMIT"),
                 ),
               ],

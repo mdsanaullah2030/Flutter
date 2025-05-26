@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saverfaver/ProductDetailPage.dart';
-import 'package:saverfaver/UserRegistrationPage.dart'; // Make sure this exists
+import 'package:saverfaver/UserRegistrationPage.dart';
+import 'package:saverfaver/WalletPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,23 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   int _selectedIndex = 0;
 
-  final List<String> categories = const ['Cosmetics', 'Fashion', 'Gadget', 'Trending'];
+  final List<String> categories = ['Cosmetics', 'Fashion', 'Gadget', 'Trending'];
 
-  final List<Map<String, dynamic>> products = const [
-    {
-      "name": "Silver Laptop",
-      "price": "\$200",
-      "series": "X90 Series",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8J_yZ1oKmz4dClcFpOL4tWg8L641qrEWI9g&s",
-    },
-    {
-      "name": "Smart Watch",
-      "price": "\$50",
-      "series": "K9 Series",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8J_yZ1oKmz4dClcFpOL4tWg8L641qrEWI9g&s",
-    },
+  final List<Map<String, dynamic>> products = [
     {
       "name": "Silver Laptop",
       "price": "\$200",
@@ -39,23 +30,10 @@ class _HomePageState extends State<HomePage> {
       "series": "K9 Series",
       "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZUXyyIKSBbKMllRKzykzr55b18G_tSm9p_Q&s",
     },
-    {
-      "name": "Silver Laptop",
-      "price": "\$200",
-      "series": "X90 Series",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvc1jALTaoQwM1e6RyOnGERUh9ZVyE2zFU1A&s",
-    },
-    {
-      "name": "Smart Watch",
-      "price": "\$50",
-      "series": "K9 Series",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS30apYYnBvYRXJ_mNUsQKQund25E7sYLQQuw&s",
-    },
   ];
 
   void _onItemTapped(int index) {
     if (index == 3) {
-      // Navigate to registration page on Profile tap
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const UserRegistrationPage()),
@@ -70,6 +48,39 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(color: Colors.green),
+              accountName: const Text("MD SANAULLAH"),
+              accountEmail: const Text("john@example.com"),
+              currentAccountPicture: const CircleAvatar(
+                backgroundImage: NetworkImage("https://avatars.githubusercontent.com/u/158471899?v=4"),
+              ),
+            ),
+            ListTile(leading: const Icon(Icons.dashboard), title: const Text('Dashboard'), onTap: () => Navigator.pop(context)),
+            ListTile(leading: const Icon(Icons.person), title: const Text('Profile'), onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRegistrationPage()))),
+            ListTile(
+              leading: const Icon(Icons.account_balance_wallet),
+              title: const Text('Wallet'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WalletPage()),
+                );
+              },
+            ),
+
+            ListTile(leading: const Icon(Icons.notifications), title: const Text('Notifications'), onTap: () => Navigator.pop(context)),
+            ListTile(leading: const Icon(Icons.card_giftcard), title: const Text('Referral Code'), onTap: () => Navigator.pop(context)),
+            ListTile(leading: const Icon(Icons.call), title: const Text('Call Center'), onTap: () => Navigator.pop(context)),
+            ListTile(leading: const Icon(Icons.help), title: const Text('Help'), onTap: () => Navigator.pop(context)),
+            ListTile(leading: const Icon(Icons.logout), title: const Text('Logout'), onTap: () => Navigator.pop(context)),
+          ],
+        ),
+      ),
       backgroundColor: const Color(0xFFF5F6FA),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -80,29 +91,13 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                 child: Row(
                   children: [
-                    const Text('CapNEST',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          prefixIcon: const Icon(Icons.search),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
+                    IconButton(
+                      icon: const Icon(Icons.menu, color: Colors.green),
+                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                     ),
-                    const SizedBox(width: 10),
-                    const CircleAvatar(
-                      backgroundColor: Colors.orange,
-                      child: Icon(Icons.tune, color: Colors.white),
-                    )
+                    const Text('CapNEST', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+                    const Spacer(),
+                    const CircleAvatar(backgroundColor: Colors.orange, child: Icon(Icons.tune, color: Colors.white))
                   ],
                 ),
               ),
@@ -111,37 +106,24 @@ class _HomePageState extends State<HomePage> {
               Container(
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Buy Once, Earn\nProfit for 10 Years!',
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+                    Text('Buy Once, Earn\nProfit for 10 Years!',
+                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                     SizedBox(height: 5),
-                    Text(
-                      'Cash on Delivery | Genuine Products\nMRP Pricing Guaranteed',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    )
+                    Text('Cash on Delivery | Genuine Products\nMRP Pricing Guaranteed',
+                        style: TextStyle(color: Colors.white70, fontSize: 12)),
                   ],
                 ),
               ),
 
-              // Category Header
+              // Categories
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: const [
-                    Text('Available Category', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  ],
-                ),
+                child: Row(children: const [Text('Available Category', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))]),
               ),
-
-              // Categories Horizontal List
               SizedBox(
                 height: 40,
                 child: ListView.builder(
@@ -183,9 +165,7 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailPage(),
-                          ),
+                          MaterialPageRoute(builder: (context) => ProductDetailPage()),
                         );
                       },
                       child: Card(
@@ -209,14 +189,8 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    product["name"],
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    product["price"],
-                                    style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
-                                  ),
+                                  Text(product["name"], style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(product["price"], style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               Text(product["series"], style: const TextStyle(fontSize: 12)),
