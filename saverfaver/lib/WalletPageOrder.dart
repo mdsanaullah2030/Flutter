@@ -1,4 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:saverfaver/WithdrawUser.dart';
+
+// Dummy page - Replace with actual implementation
+class WalletPageWithdrawUser extends StatelessWidget {
+  const WalletPageWithdrawUser({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Withdraw Page')),
+      body: const Center(child: Text('This is the Withdraw Page')),
+    );
+  }
+}
 
 class WalletPageOrder extends StatelessWidget {
   const WalletPageOrder({super.key});
@@ -31,7 +45,7 @@ class WalletPageOrder extends StatelessWidget {
       body: Column(
         children: [
           _buildSummaryCard(),
-          _buildActionButtons(),
+          _buildActionButtons(context),
           _transactionHeader(),
           _transactionRow("May 12, 2025", "46882", "1000.00", "Delivered"),
           _transactionRow("May 18, 2025", "45780", "578.00", "Processing"),
@@ -87,26 +101,35 @@ class WalletPageOrder extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _actionButton(Icons.account_balance_wallet, "Earning"),
-          _actionButton(Icons.shopping_cart, "Order", Colors.blue),
-          _actionButton(Icons.attach_money, "Withdraw"),
+          _actionButton(Icons.account_balance_wallet, "Earning", Colors.blue, () {
+            // TODO: Add earning action here
+          }),
+          _actionButton(Icons.shopping_cart, "Order", Colors.blue, () {
+            // TODO: Add order action here
+          }),
+          _actionButton(Icons.attach_money, "Withdraw", Colors.deepOrange, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const WithdrawUser()),
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _actionButton(IconData icon, String label, [Color bgColor = Colors.orange]) {
+  Widget _actionButton(IconData icon, String label, Color bgColor, VoidCallback onPressed) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
         child: ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: onPressed,
           icon: Icon(icon, size: 18),
           label: Text(label),
           style: ElevatedButton.styleFrom(
@@ -118,15 +141,6 @@ class WalletPageOrder extends StatelessWidget {
       ),
     );
   }
-
-
-
-
-
-
-
-
-
 
   Widget _transactionHeader() {
     return Container(

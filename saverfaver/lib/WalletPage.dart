@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:saverfaver/WalletPageOrder.dart';
+ // Import your WalletPageOrder screen
 
 class WalletPage extends StatelessWidget {
   const WalletPage({super.key});
@@ -9,7 +11,8 @@ class WalletPage extends StatelessWidget {
       backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('CapNEST', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+        title: const Text('CapNEST',
+            style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         actions: const [
           Icon(Icons.search, color: Colors.black),
           SizedBox(width: 12),
@@ -26,22 +29,46 @@ class WalletPage extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  _infoCard("Total Earned", "৳ 25.00", "May 23, 2025", Colors.blue),
+                  _infoCard(
+                      "Total Earned", "৳ 25.00", "May 23, 2025", Colors.blue),
                   const SizedBox(width: 10),
-                  _infoCard("Total Spend", "৳ 1800.00", "Md Sanaullah", Colors.blue),
+                  _infoCard("Total Spend", "৳ 1800.00", "Md Sanaullah",
+                      Colors.blue),
                 ],
               ),
             ),
 
-            // Buttons
+            // Buttons with navigation
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _actionButton(Icons.account_balance_wallet, "Earning", Colors.blue),
-                  _actionButton(Icons.shopping_cart, "Order", Colors.orange),
-                  _actionButton(Icons.attach_money, "Withdraw", Colors.deepOrange),
+                  _actionButton(
+                      icon: Icons.account_balance_wallet,
+                      label: "Earning",
+                      color: Colors.blue,
+                      onPressed: () {
+                        // Earning tapped
+                      }),
+                  _actionButton(
+                      icon: Icons.shopping_cart,
+                      label: "Order",
+                      color: Colors.orange,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const WalletPageOrder()),
+                        );
+                      }),
+                  _actionButton(
+                      icon: Icons.attach_money,
+                      label: "Withdraw",
+                      color: Colors.deepOrange,
+                      onPressed: () {
+                        // Withdraw tapped
+                      }),
                 ],
               ),
             ),
@@ -53,7 +80,8 @@ class WalletPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Transaction", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text("Transaction",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   _transactionHeader(),
                   _transactionRow("May 12, 2025", "46882", "10.00", "10.00"),
@@ -82,7 +110,8 @@ class WalletPage extends StatelessWidget {
     );
   }
 
-  Widget _infoCard(String title, String amount, String sub, Color color) {
+  Widget _infoCard(
+      String title, String amount, String sub, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -93,18 +122,28 @@ class WalletPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
+            Text(title,
+                style: const TextStyle(color: Colors.white, fontSize: 14)),
             const SizedBox(height: 6),
-            Text(amount, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(amount,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
-            Text(sub, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+            Text(sub,
+                style: const TextStyle(color: Colors.white70, fontSize: 12)),
           ],
         ),
       ),
     );
   }
 
-  Widget _actionButton(IconData icon, String label, Color color) {
+  Widget _actionButton(
+      {required IconData icon,
+        required String label,
+        required Color color,
+        required VoidCallback onPressed}) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -112,11 +151,12 @@ class WalletPage extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: color,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           icon: Icon(icon, size: 16),
           label: Text(label, style: const TextStyle(fontSize: 12)),
-          onPressed: () {},
+          onPressed: onPressed,
         ),
       ),
     );
@@ -129,19 +169,26 @@ class WalletPage extends StatelessWidget {
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(child: Text("Date", style: TextStyle(color: Colors.white))),
-          Expanded(child: Text("Order Number", style: TextStyle(color: Colors.white))),
-          Expanded(child: Text("Amount", style: TextStyle(color: Colors.white))),
-          Expanded(child: Text("Total", style: TextStyle(color: Colors.white))),
+          Expanded(
+              child: Text("Date", style: TextStyle(color: Colors.white))),
+          Expanded(
+              child:
+              Text("Order Number", style: TextStyle(color: Colors.white))),
+          Expanded(
+              child: Text("Amount", style: TextStyle(color: Colors.white))),
+          Expanded(
+              child: Text("Total", style: TextStyle(color: Colors.white))),
         ],
       ),
     );
   }
 
-  Widget _transactionRow(String date, String orderNo, String amount, String total) {
+  Widget _transactionRow(
+      String date, String orderNo, String amount, String total) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saverfaver/ProductDetailPage.dart';
 import 'package:saverfaver/UserRegistrationPage.dart';
 import 'package:saverfaver/WalletPage.dart';
+import 'package:saverfaver/WalletPageOrder.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -68,10 +69,10 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const WalletPage()),
+                  MaterialPageRoute(builder: (context) =>  const WalletPage()),
                 );
               },
-            ),
+            ),  //const WalletPage()),
 
             ListTile(leading: const Icon(Icons.notifications), title: const Text('Notifications'), onTap: () => Navigator.pop(context)),
             ListTile(leading: const Icon(Icons.card_giftcard), title: const Text('Referral Code'), onTap: () => Navigator.pop(context)),
