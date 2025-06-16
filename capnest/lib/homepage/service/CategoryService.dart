@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:capnest/homepage/model/Category.dart';
 
 class CategoryService {
-  final String _baseUrl = 'http://localhost:2030/api/categories/get';
+  final String _baseUrl = 'http://75.119.134.82:2030/api/categories/get';
 
   Future<List<Category>> fetchCategories() async {
     try {
