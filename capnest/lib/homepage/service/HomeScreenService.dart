@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:capnest/homepage/model/HomeScreen.dart';
 import 'package:http/http.dart' as http;
- // Assuming your model file is named like this
+// Assuming your model file is named like this
 
 class HomeScreenService {
   final String _baseUrl = 'http://75.119.134.82:2030/api/homeScreen/get';

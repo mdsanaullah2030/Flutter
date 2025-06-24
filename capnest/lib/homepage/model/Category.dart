@@ -7,15 +7,13 @@ class Category {
     required this.categoryName,
   });
 
-  // Factory constructor to create a Category from JSON
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['id'],
-      categoryName: json['categoryname'],
+      id: json['id'] ?? 0,
+      categoryName: json['categoryname'] ?? '',
     );
   }
 
-  // Method to convert a Category to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
