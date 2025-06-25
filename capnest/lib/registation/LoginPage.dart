@@ -1,9 +1,53 @@
-import 'package:capnest/registation/UserRegistrationPage.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:capnest/homepage/HomePage.dart'; // Your homepage after login
+import 'package:capnest/registation/UserRegistrationPage.dart';
 
-
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController identifierController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> loginUser(String identifier, String password) async {
+    const url = 'http://75.119.134.82:2030/login';
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': identifier,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final message = data['message'] ?? 'Login successful';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+
+      // Redirect to HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Invalid credentials. Please register."),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +59,11 @@ class LoginPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top bar with logo, search, filter
+              // Top bar
               Row(
                 children: [
-                  const Text(
-                    'CapNEST',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('CapNEST',
+                      style: TextStyle(color: Colors.green, fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 10),
                   Expanded(
                     child: TextField(
@@ -49,8 +87,8 @@ class LoginPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 50),
 
+              const SizedBox(height: 50),
               const Center(
                 child: Text(
                   'Welcome to CapNEST',
@@ -59,12 +97,19 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              _buildInputField(icon: Icons.person, hint: 'Username'),
-              _buildInputField(icon: Icons.lock, hint: 'Password', obscure: true),
+              _buildInputField(
+                icon: Icons.person,
+                hint: 'Username or Email',
+                controller: identifierController,
+              ),
+              _buildInputField(
+                icon: Icons.lock,
+                hint: 'Password',
+                controller: passwordController,
+                obscure: true,
+              ),
 
               const SizedBox(height: 10),
-
-              // Remember me and Forgot password
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -85,8 +130,6 @@ class LoginPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 10),
-
-              // Login button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -97,14 +140,24 @@ class LoginPage extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    final identifier = identifierController.text.trim();
+                    final password = passwordController.text;
+
+                    if (identifier.isEmpty || password.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please fill in all fields')),
+                      );
+                      return;
+                    }
+
+                    loginUser(identifier, password);
+                  },
                   child: const Text("Log in"),
                 ),
               ),
 
               const SizedBox(height: 10),
-
-              // Divider with "Or"
               Row(
                 children: const [
                   Expanded(child: Divider()),
@@ -115,10 +168,9 @@ class LoginPage extends StatelessWidget {
                   Expanded(child: Divider()),
                 ],
               ),
-
               const SizedBox(height: 10),
 
-              // Sign Up button
+              // Sign Up
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -133,7 +185,7 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => UserRegistrationPage()),
+                      MaterialPageRoute(builder: (context) => const UserRegistrationPage()),
                     );
                   },
                   child: const Text("Sign up"),
@@ -144,7 +196,7 @@ class LoginPage extends StatelessWidget {
         ),
       ),
 
-      // Bottom Navigation Bar
+      // Bottom Nav
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         selectedItemColor: Colors.orange,
@@ -161,8 +213,12 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  // Reusable input field widget
-  Widget _buildInputField({required IconData icon, required String hint, bool obscure = false}) {
+  Widget _buildInputField({
+    required IconData icon,
+    required String hint,
+    required TextEditingController controller,
+    bool obscure = false,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -170,6 +226,7 @@ class LoginPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        controller: controller,
         obscureText: obscure,
         decoration: InputDecoration(
           hintText: hint,
