@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:capnest/homepage/HomePage.dart'; // Your homepage after login
+import 'package:capnest/homepage/HomePage.dart';
 import 'package:capnest/registation/UserRegistrationPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,39 +12,46 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController identifierController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future<void> loginUser(String identifier, String password) async {
+  Future<void> loginUser(String email, String password) async {
     const url = 'http://75.119.134.82:2030/login';
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': identifier,
-        'password': password,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final message = data['message'] ?? 'Login successful';
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email, // ✅ Must use 'email'
+          'password': password,
+        }),
       );
 
-      // Redirect to HomePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } else {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final token = data['token'];
+        final message = data['message'];
+
+        // You can store token locally using shared_preferences if needed
+        // For now, just show a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+
+        // Navigate to HomePage
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Invalid email or password.")),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Invalid credentials. Please register."),
-        ),
+        SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
   }
@@ -59,11 +66,13 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top bar
               Row(
                 children: [
                   const Text('CapNEST',
-                      style: TextStyle(color: Colors.green, fontSize: 20, fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
                   const SizedBox(width: 10),
                   Expanded(
                     child: TextField(
@@ -72,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
                         prefixIcon: const Icon(Icons.search),
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                        contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
                           borderSide: BorderSide.none,
@@ -87,7 +97,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 50),
               const Center(
                 child: Text(
@@ -96,11 +105,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 30),
-
               _buildInputField(
-                icon: Icons.person,
-                hint: 'Username or Email',
-                controller: identifierController,
+                icon: Icons.email,
+                hint: 'Email',
+                controller: emailController,
               ),
               _buildInputField(
                 icon: Icons.lock,
@@ -108,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
                 controller: passwordController,
                 obscure: true,
               ),
-
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 10),
               SizedBox(
                 width: double.infinity,
@@ -141,22 +147,19 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   onPressed: () {
-                    final identifier = identifierController.text.trim();
+                    final email = emailController.text.trim();
                     final password = passwordController.text;
-
-                    if (identifier.isEmpty || password.isEmpty) {
+                    if (email.isEmpty || password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please fill in all fields')),
                       );
                       return;
                     }
-
-                    loginUser(identifier, password);
+                    loginUser(email, password); // ✅ call with email
                   },
                   child: const Text("Log in"),
                 ),
               ),
-
               const SizedBox(height: 10),
               Row(
                 children: const [
@@ -169,8 +172,6 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               const SizedBox(height: 10),
-
-              // Sign Up
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -185,7 +186,9 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const UserRegistrationPage()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          const UserRegistrationPage()),
                     );
                   },
                   child: const Text("Sign up"),
@@ -195,8 +198,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-
-      // Bottom Nav
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         selectedItemColor: Colors.orange,
@@ -205,9 +206,12 @@ class _LoginPageState extends State<LoginPage> {
         showUnselectedLabels: false,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: 'Shop'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag), label: 'Shop'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble_outline), label: 'Chat'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline), label: 'Profile'),
         ],
       ),
     );

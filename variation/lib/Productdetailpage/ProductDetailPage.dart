@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:capnest/homepage/model/Product.dart';
-import 'package:capnest/homepage/service/ProductService.dart';
-import '../productorderpage/ProductOrderPage.dart';
+import 'package:variation/homepage/model/Product.dart';
+import 'package:variation/homepage/service/ProductService.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
@@ -181,24 +181,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductOrderPage(product: product),
-                          ),
-                        );
-                      },
-                      child: const Text("ORDER NOW"),
-                    ),
-
-
-
 
                     const SizedBox(width: 10),
                     OutlinedButton.icon(

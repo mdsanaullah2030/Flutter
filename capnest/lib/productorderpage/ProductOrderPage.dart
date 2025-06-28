@@ -1,9 +1,18 @@
+import 'package:capnest/homepage/model/Product.dart';
 import 'package:capnest/orderconfirmationpage/OrderConfirmationPage.dart';
 import 'package:flutter/material.dart';
 
+class ProductOrderPage extends StatefulWidget {
+  final Product product;
 
-class ProductOrderPage extends StatelessWidget {
-  const ProductOrderPage({super.key});
+  const ProductOrderPage({super.key, required this.product});
+
+  @override
+  State<ProductOrderPage> createState() => _ProductOrderPageState();
+}
+
+class _ProductOrderPageState extends State<ProductOrderPage> {
+  final String imageBaseUrl = 'http://75.119.134.82:2030/images/';
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +22,7 @@ class ProductOrderPage extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Row(
           children: const [
-            FlutterLogo(), // Replace with your actual logo
+            FlutterLogo(),
             SizedBox(width: 8),
             Text('CapNEST', style: TextStyle(color: Colors.green)),
           ],
@@ -35,10 +44,14 @@ class ProductOrderPage extends StatelessWidget {
           children: [
             // Breadcrumb
             Row(
-              children: const [
-                Text("Home > ", style: TextStyle(color: Colors.grey)),
-                Text("Cosmetics > ", style: TextStyle(color: Colors.grey)),
-                Text("Facewash", style: TextStyle(color: Colors.orange)),
+              children: [
+                const Text("Home > ", style: TextStyle(color: Colors.grey)),
+                Text(
+                  "${widget.product.category?.categoryName ?? 'Category'} > ",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                Text(widget.product.productname,
+                    style: const TextStyle(color: Colors.orange)),
               ],
             ),
             const SizedBox(height: 20),
@@ -47,13 +60,24 @@ class ProductOrderPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("XYZ Daily Face Wash", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(
+                  widget.product.productname,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
                 Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapWtOj5t_B2OQre_90RL-aQqfhEjbz3FnxA&s', // Replace with actual main product URL
-                  height: 150,
+                  '$imageBaseUrl${widget.product.imagea}',
+                  height: 150, // Set desired height
+                  width: 200,  // Set desired width
+                  fit: BoxFit.cover, // Adjusts how the image fits in the box
+                  errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image, size: 50),
                 ),
               ],
             ),
+
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -61,7 +85,10 @@ class ProductOrderPage extends StatelessWidget {
                 color: Colors.teal,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: const Text("499 Tk", style: TextStyle(color: Colors.white)),
+              child: Text(
+                "${widget.product.specialprice.toStringAsFixed(0)} Tk",
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -81,13 +108,21 @@ class ProductOrderPage extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS59WLB1ZRe_hwHKl3pZiRaY5fa9V8vRzaX8w&s', height: 30), // bKash logo
+                Image.network(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS59WLB1ZRe_hwHKl3pZiRaY5fa9V8vRzaX8w&s',
+                    height: 30),
                 const SizedBox(width: 15),
-                Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJuqjto-bR_wfpmJgTMlXiomzyEceqfPhaKQ&s', height: 30), // Nagad logo
+                Image.network(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJuqjto-bR_wfpmJgTMlXiomzyEceqfPhaKQ&s',
+                    height: 30),
                 const SizedBox(width: 15),
-                Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3ysb2JM9-m_RKKu-OcrQarxlbt-3Sq-vCRA&s', height: 30), // Rocket logo
+                Image.network(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3ysb2JM9-m_RKKu-OcrQarxlbt-3Sq-vCRA&s',
+                    height: 30),
                 const SizedBox(width: 15),
-                Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-C1mgU_6d-fRcTO-RQJ0KzAHXJG9inWxUkg&s', height: 30), // Upay logo
+                Image.network(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-C1mgU_6d-fRcTO-RQJ0KzAHXJG9inWxUkg&s',
+                    height: 30),
               ],
             ),
 
@@ -110,18 +145,23 @@ class ProductOrderPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Referral Code", style: TextStyle(decoration: TextDecoration.underline)),
+                const Text("Referral Code",
+                    style:
+                    TextStyle(decoration: TextDecoration.underline)),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OrderConfirmationPage(userName: 'Alex'),
+                        builder: (context) =>
+                        const OrderConfirmationPage(userName: 'Alex'),
                       ),
                     );
                   },
@@ -135,8 +175,6 @@ class ProductOrderPage extends StatelessWidget {
           ],
         ),
       ),
-
-      // Bottom Navigation
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey,
@@ -157,7 +195,8 @@ class ProductOrderPage extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         ),
       ),
     );
@@ -177,9 +216,8 @@ class ProductOrderPage extends StatelessWidget {
           child: DropdownButton<String>(
             isExpanded: true,
             value: selected,
-            items: items
-                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                .toList(),
+            items:
+            items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
             onChanged: (_) {},
           ),
         ),

@@ -1,4 +1,6 @@
 import 'package:capnest/homepage/HomePage.dart';
+import 'package:capnest/orderdetailspage/OrderDetailsPage.dart';
+import 'package:capnest/productorderpage/ProductOrderPage.dart';
 import 'package:flutter/material.dart';
 
 
